@@ -1,4 +1,4 @@
-$.getJSON('/data/pizzarows.json', function(pizzaRows) {
+$.getJSON('/data/pizza.json', function(pizzaRows) {
   console.log(pizzaRows)
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
@@ -14,6 +14,9 @@ $.getJSON('/data/pizzarows.json', function(pizzaRows) {
     // minZoom: 9,
     // maxZoom: 14
   });
+
+
+
 
   // now add markers for our favorite pizza shops
   pizzaRows.forEach(function(pizzaRow) {
