@@ -1,4 +1,4 @@
-$.getJSON('/data/toilets.json', function(parkToilets) {
+$.getJSON('data/toilets.json', function(parkToilets) {
   // console.log(parkToilets)
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
