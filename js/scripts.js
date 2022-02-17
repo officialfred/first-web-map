@@ -1,5 +1,5 @@
-$.getJSON('/data/pizzarows.json', function(pizzaRows) {
-  console.log(pizzaRows)
+$.getJSON('/data/toilets.json', function(parkToilets) {
+  // console.log(parkToilets)
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
 
@@ -16,38 +16,35 @@ $.getJSON('/data/pizzarows.json', function(pizzaRows) {
   });
 
   // now add markers for our favorite pizza shops
-  pizzaRows.forEach(function(pizzaRow) {
+  parkToilets.forEach(function(toilet) {
+    var streetAddress = toilet.Location.replaceAll(' ', '%20')
+    var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + streetAddress + ".json?proximity=-74.0060,40.7128&limit=1&access_token=pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A"
+    let coord = fetch(url)
+    $.getJSON(url, function(geocode){
+      mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
+      var coord = geocode.features[0]['center']
+
+
     var popup = new mapboxgl.Popup({ offset: 40 })
       .setHTML(`
-        <p><strong>${pizzaRow.firstname}</strong> loves the pizza at <strong>${pizzaRow.pizzashop}</strong></p>
+        <p><strong>${toilet.Name}</strong></p>
       `);
 
-    // default is purple for Wagner
-    var color = 'purple'
+    // default is red for Inaccessible
+    var color = 'red'
 
-    if (pizzaRow.school === 'Tandon') {
-      color = 'orange'
-    }
-
-    if (pizzaRow.school === 'instructor') {
-      color = 'steelblue'
-    }
-
-    if (pizzaRow.school === 'CUSP') {
+    if (toilet.HandicapAccessible === 'Yes') {
       color = 'green'
     }
-
-    if (pizzaRow.school === 'GSAS') {
-      color = 'pink'
-    }
-
-
 
     new mapboxgl.Marker({
       color: color
     })
-      .setLngLat([pizzaRow.longitude, pizzaRow.latitude])
+
+
+      .setLngLat(coord)
       .setPopup(popup)
       .addTo(map);
+    })
   })
 })
