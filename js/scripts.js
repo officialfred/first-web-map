@@ -1,5 +1,5 @@
 $.getJSON('data/toilets.json', function(parkToilets) {
-  // console.log(parkToilets)
+  //get the JSON data, replace with API call in the future
 
   mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
 
@@ -15,22 +15,23 @@ $.getJSON('data/toilets.json', function(parkToilets) {
     // maxZoom: 14
   });
 
-  // now add markers for our favorite pizza shops
+  // now add markers for our toilets
   parkToilets.forEach(function(toilet) {
+
+    //Make API calls to forward geocode the locations from the addresses
     var streetAddress = toilet.Location.replaceAll(' ', '%20')
     var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + streetAddress + ".json?proximity=-74.0060,40.7128&limit=1&access_token=pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A"
-    let coord = fetch(url)
     $.getJSON(url, function(geocode){
       mapboxgl.accessToken = 'pk.eyJ1IjoiY3dob25nIiwiYSI6IjAyYzIwYTJjYTVhMzUxZTVkMzdmYTQ2YzBmMTM0ZDAyIn0.owNd_Qa7Sw2neNJbK6zc1A'
       var coord = geocode.features[0]['center']
 
-
+    //Create popup
     var popup = new mapboxgl.Popup({ offset: 40 })
       .setHTML(`
         <p><strong>${toilet.Name}</strong></p>
       `);
 
-    // default is red for Inaccessible
+    // Color for Accessible / Inaccessible
     var color = 'red'
 
     if (toilet.HandicapAccessible === 'Yes') {
@@ -40,8 +41,7 @@ $.getJSON('data/toilets.json', function(parkToilets) {
     new mapboxgl.Marker({
       color: color
     })
-
-
+    
       .setLngLat(coord)
       .setPopup(popup)
       .addTo(map);
